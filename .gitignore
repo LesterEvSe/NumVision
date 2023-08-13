@@ -1,0 +1,8 @@
+venv
+*.idea
+*.iml
+bin
+include
+lib
+lib64
+*.cfg
