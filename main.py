@@ -5,10 +5,14 @@ from PIL import Image
 
 image_matrix = np.array(Image.open('000000-num5.png').convert('L'))
 
-a0 = image_matrix.flatten()
-layers = [lr.Layer(a0)]  # Layers, without output
-for i in range(1, 3):
-    layers.append(lr.Layer(layers[i-1].calculate_next_layer(func.sig)))
+LAYERS = 4
+HIDDEN_LAYERS_SIZE = 16
 
+a_prev = image_matrix.flatten()
+layers = []
+for lyr in range(2, 5):
+    neurons = 10 if lyr == LAYERS else 16
+    next_layer = lr.Layer(a_prev, neurons, func.sig)
 
-# print(a0)
+    layers.append(next_layer)
+    a_prev = next_layer.a
