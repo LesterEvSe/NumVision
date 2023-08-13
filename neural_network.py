@@ -9,7 +9,7 @@ class NeuralNetwork:
 
 	def calculate(self, a0, func):
 		if len(a0) != len(self.a0):
-			raise Exception("Input array data must contain", len(self.a0), "elements")
+			raise Exception("Input array data must contain " + str(len(self.a0)) + " elements")
 		prev_a = a0
 		for lay in self.layers:
 			prev_a = lay.calculate(prev_a, func)
