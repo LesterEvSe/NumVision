@@ -2,10 +2,7 @@ import numpy as np
 from PIL import Image
 
 def sig(x):
-	if x > 0:
-		return 1 / (1 + np.exp(-x))
-	else:
-		return np.exp(x) / (1 + np.exp(x))
+	return np.exp(x) / (1 + np.exp(x))
 
 def dersig(x):
 	return sig(x) * (1 - sig(x))
