@@ -1,8 +1,11 @@
+import layer as lr
 import numpy as np
 from PIL import Image
 
-im = np.array(Image.open('000000-num5.png').convert('L'))
+image_matrix = np.array(Image.open('000000-num5.png').convert('L'))
 
-print(im)
+a0 = image_matrix.flatten()
+layer = lr.Layer(a0)
 
-gr_im = Image.fromarray(im).save('wowowo-gr.png')
+
+# print(a0)
