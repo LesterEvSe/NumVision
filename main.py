@@ -8,10 +8,11 @@ import backpropagation as bp
 import test
 
 image_matrix = np.array(Image.open('000000-num5.png').convert('L'))
-
 a = [pix / 255 for pix in image_matrix.flatten()]
 
 net = nn.NeuralNetwork([28*28, 16, 16, 10])
-bp.calcGradient()
+net.calculate(a, fn.sig)
+bp.calcGradient(net)
 
-print(fn.crossEntropy(net.calculate(a, fn.sig), [0, 0, 0, 0, 0, 1, 0, 0, 0, 0]))
+
+# print(fn.crossEntropy(net.calculate(a, fn.sig), [0, 0, 0, 0, 0, 1, 0, 0, 0, 0]))
