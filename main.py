@@ -1,14 +1,17 @@
-import layer as lr
+from PIL import Image
+import numpy as np
+
 import functions as fn
 import neural_network as nn
-import numpy as np
-import cost as cs
-from PIL import Image
+import backpropagation as bp
+
+import test
 
 image_matrix = np.array(Image.open('000000-num5.png').convert('L'))
 
-a = [a / 255 for a in image_matrix.flatten()]
+a = [pix / 255 for pix in image_matrix.flatten()]
 
-n = nn.NeuralNetwork([28*28, 16, 16, 10])
+net = nn.NeuralNetwork([28*28, 16, 16, 10])
+bp.calcGradient()
 
-print(cs.cost(n.calculate(a, fn.sig), [0, 0, 0, 0, 0, 1, 0, 0, 0, 0]))
+print(fn.crossEntropy(net.calculate(a, fn.sig), [0, 0, 0, 0, 0, 1, 0, 0, 0, 0]))

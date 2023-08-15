@@ -1,6 +1,4 @@
-import numpy as np
 import layer as ly
-import functions as fn
 
 class NeuralNetwork: 
 	def __init__(self, sizes):
@@ -12,5 +10,5 @@ class NeuralNetwork:
 			raise Exception("Input array data must contain " + str(len(self.a0)) + " elements")
 		prev_a = a0
 		for lay in self.layers:
-			prev_a = lay.calculate(prev_a, func)
+			prev_a = lay.calcNextLayer(prev_a, func)
 		return prev_a

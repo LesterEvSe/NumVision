@@ -1,4 +1,5 @@
 import numpy as np
 import functions as fn
-import cost as cs
 
+def calcGradient():
+    new_weights = []

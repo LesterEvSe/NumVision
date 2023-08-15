@@ -13,6 +13,10 @@ class Layer:
                                       layer_size)
         self.a = []
 
-    def calculate(self, a_prev, func):
+    def calcNextLayer(self, a_prev, func):
         self.a = func(np.dot(self.W, a_prev) + self.bias)
         return self.a
+
+    def recalc_weights(self, W, bias):
+        self.W += W
+        self.bias += bias
