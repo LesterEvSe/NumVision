@@ -14,5 +14,5 @@ class NeuralNetwork:
         self.layers.append(ly.Layer(prev_neurons, neurons, func))
 
     # Start from 0
-    def getLayer(self, ind: int):
-        return self.layers[ind]
+    def getLayerA(self, layer: int):
+        return self.a0 if layer == -1 else self.layers[layer].a

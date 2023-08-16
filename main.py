@@ -14,4 +14,7 @@ net = nn.NeuralNetwork(inputImage)
 net.addLayer(16, fn.sig)
 net.addLayer(16, fn.sig)
 net.addLayer(10, fn.sig)
-# bp.calcGradient(net)
+num = np.array([0, 0, 0, 0, 0, 1, 0, 0, 0, 0])
+
+weighs = bp.calcGradient(net, num)
+weighs.printAll()

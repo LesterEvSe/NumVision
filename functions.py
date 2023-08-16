@@ -19,7 +19,7 @@ def squareDeviation(a_final, real_ans):
 	return sum([(a_final[i] - real_ans[i]) ** 2 for i in range(len(real_ans))])
 
 def derSquareDeviation(a_final, real_ans):
-	return sum([2*(a_final[i] - real_ans[i]) for i in range(len(real_ans))])
+	return [2*(a_final[i] - real_ans[i]) for i in range(len(real_ans))]
 
 def crossEntropy(a_final, real_ans):
 	def formula(a, y):
@@ -27,4 +27,4 @@ def crossEntropy(a_final, real_ans):
 	return sum(formula(a_final[i], real_ans[i]) for i in range(len(real_ans)))
 
 def derCrossEntropy(a_final, real_ans):
-	return sum([np.log(real_ans[i]) - np.log(1 - real_ans[i]) for i in range(len(real_ans))])
+	return [np.log(real_ans[i]) - np.log(1 - real_ans[i]) for i in range(len(real_ans))]

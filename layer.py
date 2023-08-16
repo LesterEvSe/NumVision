@@ -1,23 +1,26 @@
 import numpy as np
 
 class Layer:
+    s_from = -1
+    s_to = 1
     def __init__(self, a_prev: np.array, layer_size: int, func):
-        self.W = np.random.rand(layer_size, a_prev.shape[0])
+        self.W = np.random.uniform(self.s_from, self.s_to,
+                                   size=(layer_size, a_prev.shape[0]))
         self.bias = np.zeros(layer_size)
-        self.a = self.calcLayer(a_prev, func)
+        self.z = self.calcLayer(a_prev)
+        self.a = func(self.z)
 
-    def calcLayer(self, a_prev, func):
-        return func(np.dot(self.W, a_prev) + self.bias)
+    def calcLayer(self, a_prev):
+        return np.dot(self.W, a_prev) + self.bias
 
-    def recalcLayer(self, W, bias):
-        self.W += W
+    def recalcLayer(self, weighs, bias):
+        self.W += weighs
         self.bias += bias
 
     def getNeurons(self):
         return self.a
 
-    def getWeight(self, i, j):
-        return self.W[i][j]
-    def getBias(self, i):
-        return self.bias[i]
-
+    def getWShape(self):
+        return self.W.shape
+    def getBiasSize(self):
+        return self.bias.shape[0]
