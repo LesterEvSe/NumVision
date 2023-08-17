@@ -25,7 +25,7 @@ def calcGradient(net: nn, real_ans):
                 derC0_curr[k] += W_old[j][k]
             bias[j] = temp_foo * derC0_prev[j]
 
-        weighs.add(ly, W, bias)
+        weighs.push(ly, W, bias)
         derC0_prev = derC0_curr
     return weighs
 

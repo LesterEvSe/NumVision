@@ -7,13 +7,20 @@ class Layer:
         self.W = np.random.uniform(self.s_from, self.s_to,
                                    size=(layer_size, a_prev.shape[0]))
         self.bias = np.zeros(layer_size)
-        self.z = self.calcLayer(a_prev)
-        self.a = func(self.z)
+        self.func = func
+
+        self.z = None
+        self.a = None
+        self.recalcLayer(a_prev)
+
+    def recalcLayer(self, a_prev):
+        self.z = np.dot(self.W, a_prev) + self.bias
+        self.a = self.func(self.z)
 
     def calcLayer(self, a_prev):
         return np.dot(self.W, a_prev) + self.bias
 
-    def recalcLayer(self, weighs: np.array, bias: np.array):
+    def recalcWAndBias(self, weighs: np.array, bias: np.array):
         self.W += weighs
         self.bias += bias
 
