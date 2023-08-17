@@ -1,9 +1,14 @@
-venv
+# files
+*.cfg
 *.idea
 *.iml
+
+# folders
+venv
 bin
 include
 lib
 lib64
-*.cfg
 *pycache*
+test
+train

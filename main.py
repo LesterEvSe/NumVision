@@ -1,4 +1,5 @@
 from PIL import Image
+import os
 import numpy as np
 
 import functions as fn
@@ -7,14 +8,32 @@ import backpropagation as bp
 
 import test
 
-image_matrix = np.array(Image.open('000000-num5.png').convert('L'))
-inputImage = np.array([pix / 255 for pix in image_matrix.flatten()])
+imageFolder = "../train"
+imageFiles = [f for f in os.listdir(imageFolder)
+              if os.path.isfile(os.path.join(imageFolder, f))]
 
-net = nn.NeuralNetwork(inputImage)
-net.addLayer(16, fn.sig)
-net.addLayer(16, fn.sig)
-net.addLayer(10, fn.sig)
-num = np.array([0, 0, 0, 0, 0, 1, 0, 0, 0, 0])
+images = []
+pic = 1
 
-weighs = bp.calcGradient(net, num)
-weighs.printAll()
+for imFile in imageFiles:
+    imPath = os.path.join(imageFolder, imFile)
+    img = np.array(Image.open(imPath).convert('L'))
+
+    numSet = np.zeros(10)
+    numSet[int(imFile[-5])] = 1
+
+    imTuple = (numSet, np.array([pix / 255 for pix in img.flatten()]))
+    images.append(imTuple)
+
+    if pic > 1_000:
+        break
+    pic += 1
+
+
+# net = nn.NeuralNetwork(inputImage)
+# net.addLayer(16, fn.sig)
+# net.addLayer(16, fn.sig)
+# net.addLayer(10, fn.sig)
+#
+# weighs = bp.calcGradient(net, num)
+# weighs.printAll()

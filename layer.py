@@ -13,7 +13,7 @@ class Layer:
     def calcLayer(self, a_prev):
         return np.dot(self.W, a_prev) + self.bias
 
-    def recalcLayer(self, weighs, bias):
+    def recalcLayer(self, weighs: np.array, bias: np.array):
         self.W += weighs
         self.bias += bias
 
