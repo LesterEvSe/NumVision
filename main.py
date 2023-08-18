@@ -3,10 +3,9 @@ import os
 import numpy as np
 from random import shuffle
 
-import functions as fn
 import neural_network as nn
-import backpropagation as bp
-import weigh_storage as wh
+import functions as fn
+import gradient as gr
 
 # Load pictures from folder
 imageFolder = "train"
@@ -29,39 +28,48 @@ for imFile in imageFiles:
 
     imTuple = (np.array([pix / 255 for pix in img.flatten()]), numSet, num)
     images.append(imTuple)
+    if pic % 5_000 == 0:
+        print("Pictures load: ", pic)
 
-    if pic > 10_000:
+    if pic > 20_000:
         break
     pic += 1
 shuffle(images)
 
-def print_info(neu_net: nn, ind: int, guessed: int, pictures: int):
-    print(str(ind) + '.', images[ind][2], str(guessed/pictures) + '%', neu_net.getLastA())
+
+# Prepare function
+def print_info(coun: int, neu_net: nn, image, guessed: int, pictures: int):
+    print(str(coun) + ')', image[2], '[C0 =', round(neu_net.calc_C0(image[1]), 3), end='] ')
+    print(str(guessed/pictures * 100) + '%', end=' ')
+
+    print('[', end='')
+    for elem in neu_net.get_answer_a():
+        print(elem, end=' ')
+    print(']')
 
 
-# Create NeuralNetwork
-net = nn.NeuralNetwork()
-net.replaceData(images[0][0])
+# Create Neural Network
+net = nn.NeuralNetwork(images[0][0], fn.square_error)
+net.add_layer(16, fn.sig)
+net.add_layer(16, fn.sig)
+net.add_layer(10, fn.sig)
 
-net.addLayer(16, fn.sig)
-net.addLayer(16, fn.sig)
-net.addLayer(10, fn.sig)
-
-currWeighs = wh.WeighStorage(net)
+grad = gr.Gradient(net.get_layers_num())
+counter = overall = 1
 guess = 0
-overall = 1
-for i in range(len(images)):
-    guess += net.answerCorrect(images[i][2])
-    net.replaceData(images[i][0])
-    currWeighs.addAnother(bp.calcGradient(net, images[i][1]))
 
-    if i % 100 == 0:
-        print_info(net, i, guess, overall)
+for im in images:
+    guess += net.answer_correct(im[2])
+    net.change_a0(im[0])
+    grad.sub(grad.backpropagation(net, im[1]))
+
+    if counter % 100 == 0:
+        print_info(counter, net, im, guess, overall)
         guess = overall = 0
-        currWeighs.divide(100)
+        grad.div(100)
 
-        net.changeWeighsAndBiases(currWeighs)
-        currWeighs = wh.WeighStorage(net)
-        print()
+        net.correct_weighs_biases(grad)
+        grad = gr.Gradient(net.get_layers_num())
     overall += 1
+    counter += 1
 
