@@ -31,7 +31,7 @@ for imFile in imageFiles:
     if pic % 5_000 == 0:
         print("Pictures load: ", pic)
 
-    if pic > 20_000:
+    if pic > 30_000:
         break
     pic += 1
 shuffle(images)
@@ -40,7 +40,7 @@ shuffle(images)
 # Prepare function
 def print_info(coun: int, neu_net: nn, image, guessed: int, pictures: int):
     print(str(coun) + ')', image[2], '[C0 =', round(neu_net.calc_C0(image[1]), 3), end='] ')
-    print(str(guessed/pictures * 100) + '%', end=' ')
+    print(str(round(guessed/pictures * 100, 2)) + '%', end=' ')
 
     print('[', end='')
     for elem in neu_net.get_answer_a():
