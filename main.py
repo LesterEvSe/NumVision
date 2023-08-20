@@ -5,7 +5,7 @@ from random import shuffle
 
 import neural_network as nn
 import functions as fn
-import gradient as gr
+# import gradient as gr
 
 # Load pictures from folder
 imageFolder = "train"
@@ -31,7 +31,7 @@ for imFile in imageFiles:
     if pic % 5_000 == 0:
         print("Pictures load: ", pic)
 
-    if pic > 30_000:
+    if pic > 1_000:
         break
     pic += 1
 shuffle(images)
@@ -49,27 +49,40 @@ def print_info(coun: int, neu_net: nn, image, guessed: int, pictures: int):
 
 
 # Create Neural Network
-net = nn.NeuralNetwork(images[0][0], fn.square_error)
+# images[0][0].shape[0] here 28*28 = 784 pixels
+net = nn.NeuralNetwork(images[0][0].shape[0])
 net.add_layer(16, fn.sig)
 net.add_layer(16, fn.sig)
 net.add_layer(10, fn.sig)
 
+
+'''
 grad = gr.Gradient(net.get_layers_num())
-counter = overall = 1
 guess = 0
+counter = overall = 1
+learning_speed = 0.01
+
+update = 1
+
 
 for im in images:
     guess += net.answer_correct(im[2])
-    net.change_a0(im[0])
-    grad.sub(grad.backpropagation(net, im[1]))
+    net.set_a0(im[0])
+    temp = grad.backpropagation(net, im[1])
+    grad.sub(temp, learning_speed)
+    break
 
-    if counter % 100 == 0:
+    if counter % 50 == 0:
         print_info(counter, net, im, guess, overall)
-        guess = overall = 0
-        grad.div(100)
+        # print(grad)
+
+    if counter % update == 0:
+        # guess = overall = 0
+        grad.div(update)
 
         net.correct_weighs_biases(grad)
         grad = gr.Gradient(net.get_layers_num())
     overall += 1
     counter += 1
 
+'''

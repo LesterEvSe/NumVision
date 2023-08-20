@@ -1,17 +1,20 @@
 import numpy as np
 
 # Activation functions
-def sig(x):
-	return 1 / (1 + np.exp(-x))
+def sig(z):
+	return 1 / (1 + np.exp(-z))
 
 def der_sig(x):
 	return sig(x) * (1 - sig(x))
 
 def ReLU(x):
-	return max(0, x)
+	return np.array([max(0, elem) for elem in x])
+	# return max(0, x)
 
+# Don't work. Heeeee, ReLU
 def der_ReLU(x):
-	return 1 if x > 0 else 0
+	return np.array([1 if x[i] > 0 else 0 for i in range(x.shape[0])])
+	# return 1 if x > 0 else 0
 
 
 # Evaluation functions
