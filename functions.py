@@ -7,22 +7,14 @@ def sig(z):
 def der_sig(x):
 	return sig(x) * (1 - sig(x))
 
-def ReLU(x):
-	return np.array([max(0, elem) for elem in x])
-	# return max(0, x)
-
-# Don't work. Heeeee, ReLU
-def der_ReLU(x):
-	return np.array([1 if x[i] > 0 else 0 for i in range(x.shape[0])])
-	# return 1 if x > 0 else 0
-
 
 # Evaluation functions
 def square_error(a_final, real_ans):
 	return sum([(a_final[i] - real_ans[i]) ** 2 for i in range(len(real_ans))])
 
 def der_square_error(a_final, real_ans):
-	return [2*(a_final[i] - real_ans[i]) for i in range(len(real_ans))]
+	return 2 * (a_final - real_ans)
+	# return [2*(a_final[i] - real_ans[i]) for i in range(len(real_ans))]
 
 def cross_entropy(a_final, real_ans):
 	def formula(a, y):

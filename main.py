@@ -5,7 +5,6 @@ from random import shuffle
 
 import neural_network as nn
 import functions as fn
-# import gradient as gr
 
 # Load pictures from folder
 imageFolder = "train"
@@ -26,12 +25,12 @@ for imFile in imageFiles:
     num = int(imFile[-5])
     numSet[num] = 1
 
-    imTuple = (np.array([pix / 255 for pix in img.flatten()]), numSet, num)
+    imTuple = (np.array([[pix / 255 for pix in img.flatten()]]), numSet, num)
     images.append(imTuple)
     if pic % 5_000 == 0:
         print("Pictures load: ", pic)
 
-    if pic > 1_000:
+    if pic > 30_000:
         break
     pic += 1
 shuffle(images)
@@ -50,39 +49,29 @@ def print_info(coun: int, neu_net: nn, image, guessed: int, pictures: int):
 
 # Create Neural Network
 # images[0][0].shape[0] here 28*28 = 784 pixels
-net = nn.NeuralNetwork(images[0][0].shape[0])
-net.add_layer(16, fn.sig)
-net.add_layer(16, fn.sig)
+test = images[0][0]
+net = nn.NeuralNetwork(test.shape[1], fn.cross_entropy)
+net.add_layer(64, fn.sig)
+net.add_layer(64, fn.sig)
 net.add_layer(10, fn.sig)
 
-
-'''
-grad = gr.Gradient(net.get_layers_num())
 guess = 0
 counter = overall = 1
-learning_speed = 0.01
 
-update = 1
+for i in range(1, 10):
+    print("Generation", i)
+    for im in images:
+        net.calculate(im[0])
+        guess += net.answer_correct(im[2])
+        net.backpropagation(im[1])
 
+        if counter % 100 == 0:
+            print_info(counter, net, im, guess, overall)
 
-for im in images:
-    guess += net.answer_correct(im[2])
-    net.set_a0(im[0])
-    temp = grad.backpropagation(net, im[1])
-    grad.sub(temp, learning_speed)
-    break
+        counter += 1
+        overall += 1
+    print("\nEnd generation", i, end='\n\n')
 
-    if counter % 50 == 0:
-        print_info(counter, net, im, guess, overall)
-        # print(grad)
-
-    if counter % update == 0:
-        # guess = overall = 0
-        grad.div(update)
-
-        net.correct_weighs_biases(grad)
-        grad = gr.Gradient(net.get_layers_num())
-    overall += 1
-    counter += 1
-
-'''
+    guess = 0
+    overall = counter = 1
+    shuffle(images)
