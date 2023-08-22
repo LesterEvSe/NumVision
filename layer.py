@@ -8,12 +8,15 @@ class Layer:
         self.func = func
         if func == fn.sig:
             self.der_func = fn.der_sig
+        elif func == fn.ReLU:
+            self.der_func = fn.ReLU
+        elif func == fn.softmax:
+            self.der_func = fn.der_softmax
         else:
             raise Exception("Unknown activation function")
         self.W = np.random.uniform(Layer.s_rand_from, Layer.s_rand_to,
                                    size=(layer_size, prev_layer_size))
-        self.bias = np.random.uniform(Layer.s_rand_from, Layer.s_rand_to,
-                                      size=(layer_size, 1))
+        self.bias = np.zeros(layer_size)
 
         self.z = None
         self.a = None

@@ -25,12 +25,12 @@ for imFile in imageFiles:
     num = int(imFile[-5])
     numSet[num] = 1
 
-    imTuple = (np.array([[pix / 255 for pix in img.flatten()]]), numSet, num)
+    imTuple = (np.array([pix / 255 for pix in img.flatten()]), numSet, num)
     images.append(imTuple)
     if pic % 5_000 == 0:
         print("Pictures load: ", pic)
 
-    if pic > 30_000:
+    if pic > 1_000:
         break
     pic += 1
 shuffle(images)
@@ -50,15 +50,15 @@ def print_info(coun: int, neu_net: nn, image, guessed: int, pictures: int):
 # Create Neural Network
 # images[0][0].shape[0] here 28*28 = 784 pixels
 test = images[0][0]
-net = nn.NeuralNetwork(test.shape[1], fn.cross_entropy)
-net.add_layer(64, fn.sig)
-net.add_layer(64, fn.sig)
-net.add_layer(10, fn.sig)
+net = nn.NeuralNetwork(test.shape[0], fn.cross_entropy)
+net.add_layer(64, fn.ReLU)
+net.add_layer(64, fn.ReLU)
+net.add_layer(10, fn.softmax)
 
 guess = 0
 counter = overall = 1
 
-for i in range(1, 10):
+for i in range(1, 5+1):
     print("Generation", i)
     for im in images:
         net.calculate(im[0])

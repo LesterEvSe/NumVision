@@ -25,8 +25,8 @@ class NeuralNetwork:
         self.layers.append(ly.Layer(prev_size, layer_size, func))
 
     def calculate(self, a0: np.array):
-        self.a0 = np.transpose(a0)
-        prev = self.a0.copy()
+        self.a0 = a0
+        prev = a0
         for i in range(len(self.layers)):
             self.layers[i].calculate(prev)
             prev = self.layers[i].a
@@ -35,7 +35,7 @@ class NeuralNetwork:
         return np.argmax(self.get_answer_a()) == num
 
     def backpropagation(self, y: np.array, learning_speed=0.01):
-        derC0_prev = np.array(self.der_eval_func(self.get_answer_a(), y))
+        derC0_prev = self.der_eval_func(self.get_answer_a(), y)
 
         new_weigh = [0] * len(self.layers)
         new_bias = [0] * len(self.layers)
@@ -44,23 +44,22 @@ class NeuralNetwork:
             # arr = der(aL)/der(zL) * der(C0)/der(aL) = der(C)/der(zL)
             prev_a = self.get_a(i-1)
             arr = self.layers[i].der_func(self.layers[i].z) * derC0_prev
-            new_bias[i] = arr.copy()
+            new_bias[i] = arr
 
             net_weigh = self.layers[i].W
             net_weigh_tp = np.transpose(net_weigh)
             weigh = np.zeros(net_weigh_tp.shape)
 
             for k in range(len(prev_a)):
-                weigh[k] = np.transpose(prev_a[k] * arr)[0]
+                weigh[k] = np.transpose(prev_a[k] * arr)
 
             new_weigh[i] = np.transpose(weigh)
-            arr_tp = np.transpose(arr)
             if i == 0:
                 continue
 
-            derC0_curr = np.zeros((len(prev_a), 1))
+            derC0_curr = np.zeros(len(prev_a))
             for k in range(len(prev_a)):
-                derC0_curr[k][0] = sum(net_weigh_tp[k] * arr_tp[0])
+                derC0_curr[k] = sum(net_weigh_tp[k] * arr)
             derC0_prev = derC0_curr.copy()
 
         for i in range(len(self.layers)):
