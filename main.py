@@ -35,7 +35,7 @@ def learn_neural_network(pictures=60_000):
         imPath = os.path.join(imageFolder, imFile)
         img = np.array(Image.open(imPath).convert('L'))
 
-        # Name of the picture, example: 042269-num7.png
+        # Name of the picture, for example: 042269-num7.png
         # The symbol -5 here is a 7, which is a written digit
         numSet = np.zeros(10)
         num = int(imFile[-5])
@@ -60,7 +60,7 @@ def learn_neural_network(pictures=60_000):
     net.add_layer(10, fn.softmax)
     sv.load_to(net)
 
-    for generation in range(3):
+    for generation in range(20):
         print("Generation", generation+1)
         guess = 0
         overall = counter = 1
@@ -80,8 +80,8 @@ def learn_neural_network(pictures=60_000):
         sv.save(net)
         shuffle(images)
 
-def check_result():
-    imageFolder = "test"
+def check_result(folder='test', out=1_000):
+    imageFolder = folder
     imageFiles = [f for f in os.listdir(imageFolder)
                   if os.path.isfile(os.path.join(imageFolder, f))]
 
@@ -106,16 +106,30 @@ def check_result():
     net.add_layer(10, fn.softmax)
     sv.load_to(net)
 
-    guess = 0
-    counter = 1
+    guess = counter = 0
     for im in images:
         net.calculate(im[0])
         guess += net.answer_correct(im[1])
 
-        if counter % 1000 == 0:
-            print_info(counter, net, im, guess, counter, False)
         counter += 1
+        if counter % out != 0:
+            continue
+
+        print(imageFiles[counter-1], "it is a number with a probability")
+        answer = net.get_answer_a()
+        answer = sorted([(round(answer[i]*100, 2), i) for i in range(len(answer))], reverse=True)
+
+        for pair in answer:
+            if pair[0] == 0:
+                break
+            print(pair[1], '->', str(pair[0]) + '%')
+        print()
+
+def main():
+    folder = input('Enter name of the folder with pictures: ')
+    check_result(folder, 1)
 
 
+# learn_neural_network()
 # check_result()
-learn_neural_network()
+main()
