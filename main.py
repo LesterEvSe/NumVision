@@ -1,14 +1,26 @@
 from PIL import Image
 import os
 import numpy as np
-from random import shuffle
 
 import neural_network as nn
 import functions as fn
 
+# Prepare function
+def print_info(coun: int, neu_net: nn, image, guessed: int, quantity: int, train=True):
+    if train:
+        print(str(coun) + ')', image[2], '[C0 =', round(neu_net.calc_C0(image[1]), 3), end='] ')
+    print(str(round(guessed / quantity * 100, 2)) + '%', end=' ')
+
+    print('[', end='')
+    for elem in neu_net.get_answer_a():
+        print(elem, end=' ')
+    print(']')
 
 # Load pictures from folder
 def learn_neural_network(pictures=60_000):
+    from random import shuffle
+    from saving import save
+
     imageFolder = "train"
     imageFiles = [f for f in os.listdir(imageFolder)
                   if os.path.isfile(os.path.join(imageFolder, f))]
@@ -39,16 +51,6 @@ def learn_neural_network(pictures=60_000):
         pic += 1
     shuffle(images)
 
-    # Prepare function
-    def print_info(coun: int, neu_net: nn, image, guessed: int, pictures_local: int):
-        print(str(coun) + ')', image[2], '[C0 =', round(neu_net.calc_C0(image[1]), 3), end='] ')
-        print(str(round(guessed / pictures_local * 100, 2)) + '%', end=' ')
-
-        print('[', end='')
-        for elem in neu_net.get_answer_a():
-            print(elem, end=' ')
-        print(']')
-
     # Create Neural Network
     # images[0][0].shape[0] here 28*28 = 784 pixels
     test = images[0][0]
@@ -59,7 +61,7 @@ def learn_neural_network(pictures=60_000):
 
     guess = 0
     counter = overall = 1
-    for i in range(1, 5 + 1):
+    for i in range(1, 20 + 1):
         print("Generation", i)
         for im in images:
             net.calculate(im[0])
@@ -72,12 +74,15 @@ def learn_neural_network(pictures=60_000):
             counter += 1
             overall += 1
 
+        save(net)
         print()
+
         guess = 0
         overall = counter = 1
         shuffle(images)
 
 def check_result():
+    from saving import load_to
     imageFolder = "test"
     imageFiles = [f for f in os.listdir(imageFolder)
                   if os.path.isfile(os.path.join(imageFolder, f))]
@@ -92,7 +97,27 @@ def check_result():
 
         imTuple = (np.array([pix / 255 for pix in img.flatten()]), int(imFile[-5]))
         images.append(imTuple)
-    shuffle(images)
 
 
-learn_neural_network(1_000)
+    # Create Neural Network
+    # images[0][0].shape[0] here 28*28 = 784 pixels
+    test = images[0][0]
+    net = nn.NeuralNetwork(test.shape[0], fn.cross_entropy)
+    net.add_layer(32, fn.sig)
+    net.add_layer(64, fn.sig)
+    net.add_layer(10, fn.softmax)
+    load_to(net)
+
+    guess = 0
+    counter = 1
+    for im in images:
+        net.calculate(im[0])
+        guess += net.answer_correct(im[1])
+
+        if counter % 1000 == 0:
+            print_info(counter, net, im, guess, counter, False)
+        counter += 1
+
+
+# check_result()
+learn_neural_network()
