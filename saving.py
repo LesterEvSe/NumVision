@@ -15,7 +15,7 @@ def load_to(net: nn):
     with open('network_data.json', 'r') as json_file:
         loaded_data = json.load(json_file)
 
-    # Has equal size
+    # Have equal size
     weigh = [np.array(matrix) for matrix in loaded_data['weigh']]
     bias = [np.array(arr) for arr in loaded_data['bias']]
 

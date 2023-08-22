@@ -4,6 +4,7 @@ import numpy as np
 
 import neural_network as nn
 import functions as fn
+import saving as sv
 
 # Prepare function
 def print_info(coun: int, neu_net: nn, image, guessed: int, quantity: int, train=True):
@@ -19,7 +20,6 @@ def print_info(coun: int, neu_net: nn, image, guessed: int, quantity: int, train
 # Load pictures from folder
 def learn_neural_network(pictures=60_000):
     from random import shuffle
-    from saving import save
 
     imageFolder = "train"
     imageFiles = [f for f in os.listdir(imageFolder)
@@ -58,11 +58,13 @@ def learn_neural_network(pictures=60_000):
     net.add_layer(32, fn.sig)
     net.add_layer(64, fn.sig)
     net.add_layer(10, fn.softmax)
+    sv.load_to(net)
 
-    guess = 0
-    counter = overall = 1
-    for i in range(1, 20 + 1):
-        print("Generation", i)
+    for generation in range(3):
+        print("Generation", generation+1)
+        guess = 0
+        overall = counter = 1
+
         for im in images:
             net.calculate(im[0])
             guess += net.answer_correct(im[2])
@@ -74,15 +76,11 @@ def learn_neural_network(pictures=60_000):
             counter += 1
             overall += 1
 
-        save(net)
         print()
-
-        guess = 0
-        overall = counter = 1
+        sv.save(net)
         shuffle(images)
 
 def check_result():
-    from saving import load_to
     imageFolder = "test"
     imageFiles = [f for f in os.listdir(imageFolder)
                   if os.path.isfile(os.path.join(imageFolder, f))]
@@ -106,7 +104,7 @@ def check_result():
     net.add_layer(32, fn.sig)
     net.add_layer(64, fn.sig)
     net.add_layer(10, fn.softmax)
-    load_to(net)
+    sv.load_to(net)
 
     guess = 0
     counter = 1
