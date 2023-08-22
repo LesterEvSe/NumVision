@@ -12,6 +12,8 @@ class Layer:
             self.der_func = fn.ReLU
         elif func == fn.softmax:
             self.der_func = fn.der_softmax
+        elif func == fn.tanh:
+            self.der_func = fn.tanh
         else:
             raise Exception("Unknown activation function")
         self.W = np.random.uniform(Layer.s_rand_from, Layer.s_rand_to,

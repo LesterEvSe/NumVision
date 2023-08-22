@@ -1,6 +1,8 @@
 import numpy as np
 
 # Activation functions
+
+# Best variant for this neural network
 def sig(x):
 	return 1 / (1 + np.exp(-x))
 
@@ -8,11 +10,13 @@ def der_sig(x):
 	res = sig(x)
 	return res * (1 - res)
 
-def ReLU(x):
-	return np.array([max(0, elem) for elem in x])
+def tanh(x):
+	ez = np.exp(x)
+	e_minus_z = np.exp(-x)
+	return (ez - e_minus_z) / (ez + e_minus_z)
 
-def der_ReLU(x):
-	return np.array([1 if elem > 0 else 0 for elem in x])
+def der_tanh(x):
+	return 1 - tanh(x) ** 2
 
 def softmax(x):
 	divider = sum(np.exp(x))
@@ -21,6 +25,14 @@ def softmax(x):
 def der_softmax(x):
 	res = softmax(x)
 	return res * (1 - res)
+
+# ReLU - Rectified Linear Unit
+# ReLU and der_ReLU does not work properly with exp functions for this neural network
+def ReLU(x):
+	return np.array([max(0, elem) for elem in x])
+
+def der_ReLU(x):
+	return np.array([1 if elem > 0 else 0 for elem in x])
 
 
 # Evaluation functions
