@@ -10,5 +10,5 @@ To use it, all you have to do is upload all the pictures you want into your fold
 and then type it into the input string in the program, then AI to give you the answer.  
 The *MyNums* folder is provided as an example
 
-The link from where you can download the training data is https://github.com/pjreddie/mnist-csv-png.
+The link from where you can download the training data is https://github.com/pjreddie/mnist-csv-png.  
 The videos on which neural network was created https://youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&si=kEMfzs4GJSK72DZA
